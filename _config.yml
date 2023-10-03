@@ -4,7 +4,7 @@ title: RIORDZ
 logo: # You can add own logo. For example '/images/logo.png'.
 description: Welcome to my blog.
 baseurl: "" # The subpath of your site, e.g. /blog
-url: "" # The base hostname & protocol for your site, e.g. http://example.com
+url: "https://Riordz.github.io" # The base hostname & protocol for your site, e.g. http://example.com
 
 
 #-------------------------------
@@ -25,8 +25,8 @@ hero:
 #-------------------------------
 # Contact Settings
 contact:
-  email: your@email.com # Add your email for contact form
-  description: Norlin comes with a built-in contact form, that you can use with Formspree service to handle up to 50 submissions per month for free. You could also easily switch to another contact form service if you want. # Add a description of your form
+  email: ror.pentest@gmail.com # Add your email for contact form
+  description: Open to any suggestions, big or small! :) # Add a description of your form
 
 # NOTE
 # Norlin theme comes with a contact form built-in. You can use this form with Formspree (https://formspree.io/) service and get up to 50 submissions for free. Also, you can easily switch to another service if you want.
@@ -81,9 +81,9 @@ include:
   - _pages
 
 # Tags
-#tag_page_dir:         tag
-#tag_page_layout:      tag_page
-#tag_permalink_style:  pretty
+tag_page_dir:         tag
+tag_page_layout:      tag_page
+tag_permalink_style:  pretty
 
 sass:
   sass_dir: _sass
