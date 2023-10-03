@@ -4,7 +4,7 @@ title: RIORDZ
 logo: # You can add own logo. For example '/images/logo.png'.
 description: Welcome to my blog.
 baseurl: "" # The subpath of your site, e.g. /blog
-url: "https://Riordz.github.io" # The base hostname & protocol for your site, e.g. http://example.com
+url: "https://Riordz.com" # The base hostname & protocol for your site, e.g. http://example.com
 
 
 #-------------------------------
