@@ -21,7 +21,7 @@ We’ll cover:
 # Solution Diagram
 
 ![post-1-image2.png]({{site.baseurl}}/images/post-1-image2.png)
-*Diagram of Architecture
+Diagram of Architecture
 
 # NSG Rules
 
@@ -37,14 +37,14 @@ We’ll cover:
 
 Update system and install prerequisites
 {% highlight bash %}
-sudo apt update && sudo apt upgrade -y
-sudo apt install -y python3 python3-venv python3-pip git curl wget unzip software-properties-common
+> sudo apt update && sudo apt upgrade -y
+> sudo apt install -y python3 python3-venv python3-pip git curl wget unzip software-properties-common
 {% endhighlight %}
 
 
 # Installing and Configuring Cowrie
 
-1. Clone Cowrie repository and create Python virtual environment
+Clone Cowrie repository and create Python virtual environment
 {% highlight bash %}
 cd /opt
 sudo git clone https://github.com/cowrie/cowrie.git
@@ -55,7 +55,7 @@ pip install --upgrade pip
 pip install -r requirements.txt
 {% endhighlight %}
 
-2. Copy sample configuration files and create necessary directories
+Copy sample configuration files and create necessary directories
 {% highlight bash %}
 cp etc/cowrie.cfg.dist etc/cowrie.cfg
 cp etc/userdb.example etc/userdb.txt
@@ -63,7 +63,7 @@ mkdir -p var/log/cowrie
 mkdir -p var/lib/cowrie
 {% endhighlight %}
 
-3. Configure Cowrie ports (SSH on 2222)
+Configure Cowrie ports (SSH on 2222)
 {% highlight bash %}
 nano cowrie.cfg
 {% endhighlight %}
@@ -75,14 +75,14 @@ Modify in *cowrie.cfg*
 listen_endpoints = tcp:2222
 {% endhighlight %}
 
-3. Start Cowrie honeypot
+Start Cowrie honeypot
 {% highlight bash %}
 bin/cowrie start
 {% endhighlight %}
 
 # Install Loki
 
-1. Download and install Loki binary
+Download and install Loki binary
 {% highlight bash %}
 wget https://github.com/grafana/loki/releases/download/v3.5.2/loki-linux-amd64.zip
 unzip loki-linux-amd64.zip
@@ -90,7 +90,7 @@ chmod +x loki-linux-amd64
 sudo mv loki-linux-amd64 /usr/local/bin/loki
 {% endhighlight %}
 
-2. Create Loki configuration file /etc/loki-config.yaml
+Create Loki configuration file /etc/loki-config.yaml
 {% highlight yaml %}
 auth_enabled: false
 server:
@@ -129,20 +129,20 @@ filesystem:
 directory: /var/loki/chunks
 {% endhighlight %}
 
-3. Create directories for Loki storage and set permissions
+Create directories for Loki storage and set permissions
 {% highlight bash %}
 sudo mkdir -p /var/loki/index /var/loki/cache /var/loki/chunks
 sudo chown -R $USER:$USER /var/loki
 {% endhighlight %}
 
-4. Run Loki
+Run Loki
 {% highlight bash %}
 sudo loki -config.file=/etc/loki-config.yaml
 {% endhighlight %}
 
 # Install Promtail
 
-1. Download and install Promtail binary
+Download and install Promtail binary
 {% highlight bash %}
 wget https://github.com/grafana/loki/releases/download/v3.5.2/promtail-linux-amd64.zip
 unzip promtail-linux-amd64.zip
@@ -150,7 +150,7 @@ chmod +x promtail-linux-amd64
 sudo mv promtail-linux-amd64 /usr/local/bin/promtail
 {% endhighlight %}
 
-2. Create Promtail configuration file /etc/promtail-config.yaml
+Create Promtail configuration file /etc/promtail-config.yaml
 {% highlight yaml %}
 server:
 http_listen_port: 9080
@@ -176,7 +176,7 @@ job: cowrie
 path: /opt/cowrie/var/log/cowrie/cowrie.json
 {% endhighlight %}
 
-3. Run Promtail
+Run Promtail
 {% highlight bash %}
 sudo promtail -config.file=/etc/promtail-config.yaml
 {% endhighlight %}
@@ -210,16 +210,23 @@ Click Add data source
 
 Select Loki
 
-Set URL to http://<your-vm-ip>:3100
+Set URL to http://your-vm-IP:3100
 
 Click Save & Test (should say datasource is working)
 
-# Create Grafana Dashboard
+![3.png]({{site.baseurl}}/images/3.png)
 
-Go to Explore tab
 
-Select Loki datasource
+# Example Queries to Save to Dashboard
 
-Run query {job="cowrie"} or {} to see logs
+| Panel Name           | Panel Type     | Purpose                          | Example Loki Query Snippet                                 |
+|----------------------|----------------|---------------------------------|-----------------------------------------------------------|
+| Total Login Attempts | Stat           | Shows total login attempts count | `count_over_time({filename=~".*cowrie.log"} |= "login attempt" [1h])` |
+| Successful Logins    | Stat           | Count of successful login events | `{filename=~".*cowrie.log"} |= "login attempt [success]"` |
+| Top Usernames        | Table          | List usernames by login attempts | `sum by (user) (count_over_time(... | pattern "<_> login attempt [<result>] for user <user> from <_>" [1h]))` |
+| Active Sessions      | Time series    | Number of active sessions over time | `count_over_time(... |= "New connection" [5m])` and `count_over_time(... |= "Session Closed" [5m])` |
+| Command Executions   | Table or Logs  | Show commands executed by attackers | `{filename=~".*cowrie.log"} |= "CMD"`                     |
+| Failed Logins        | Stat or Table  | Count or list of failed login attempts | `{filename=~".*cowrie.log"} |= "login attempt [failed]"` |
 
-Create dashboards with panels based on logs and metrics as needed
+
+![4.png]({{site.baseurl}}/images/4.png)
