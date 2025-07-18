@@ -28,16 +28,17 @@ layout: default
 <!-- begin hero -->
 
 <!-- Wrap the hero name in a container -->
-<div id="hero-container" style="
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-  padding: 20px 0; /* some vertical padding */
-">
+<div id="hero-container">
   <h1 id="hero-name"></h1>
 </div>
 
 <style>
+  #hero-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40vh;  /* adjust this height as needed */
+  }
   #hero-name {
     font-size: 3rem;
     color: #FCFCFC;
@@ -82,6 +83,7 @@ layout: default
 
   type();
 </script>
+
 
 
 
