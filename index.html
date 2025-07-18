@@ -27,6 +27,31 @@ layout: default
 {% endif %}
 <!-- begin hero -->
 
+<h1 id="hero-name"></h1>
+<script>
+  const names = [
+    "Ryan O' Riordan",
+    "R. O' Riordan",
+    "Ryan Oriordan",
+    "Cybersecurity Expert Ryan",
+    "Ryan, Your Cybersecurity Guide"
+  ];
+
+  let index = 0;
+  const heroName = document.getElementById("hero-name");
+
+  function rotateName() {
+    heroName.textContent = names[index];
+    index = (index + 1) % names.length;
+  }
+
+  // Start immediately
+  rotateName();
+  // Change every 2 seconds
+  setInterval(rotateName, 2000);
+</script>
+
+
 {% include featured-posts.html %}
 
 <div class="container">
