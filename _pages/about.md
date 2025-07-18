@@ -5,10 +5,10 @@ permalink: /about/
 image: '/images/about.jpg'
 ---
 
-Hi, my name is Ryan O'Riordan. I am currently a SOC Analyst at eSentire and a dedicated MSc Cyber-Security student. My passions lie in Malware Analysis, Incident Investigations, and all things cybersecurity. I have a keen passion for tracking threats and a knack for spending countless hours on discovering useless information that I can't share with anyone..
+I’m Ryan O Riordan, but most people call me “Riordz.” I used to work as a Senior Analyst at an MSSP, and now I’m part of a CSIRT team working as an Incident Response Analyst. I really enjoy incident handling and malware analysis — there’s something satisfying about digging into an incident and figuring out exactly what happened.
 
-Since I tossed my graduation cap into the air in 2023, life's been like a sitcom episode. I went from being a regular grad to a full-fledged MSc student, all while managing to snag the prestigious Blue Team Level 1 certification – no small feat, I assure you! So, here I am, not just learning the ropes but also untangling the wires of my own life.
+I’m also pursuing an MSc to keep sharpening my skills and knowledge. Along the way, I’ve earned my BTL1 and BTL2 certifications, which have been valuable in my work.
 
-With this blog, my aim is to broaden my own understanding of these subjects, recognizing that I'm far from being an expert myself.
+This site is where I share insights, tools, and tips from my experience. Thanks for visiting — feel free to reach out or take a look around!
 
 <hr>

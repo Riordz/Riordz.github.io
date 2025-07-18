@@ -4,7 +4,7 @@ title: Visualizing Honeypot Attacks in Azure with Cowrie, Loki, and Grafana Dash
 description: A step-by-step guide to deploying a secure Cowrie SSH/Telnet honeypot on Azure, forwarding logs with Promtail and Loki, and visualizing attacker activity in Grafana.
 date: 2025-07-18 21:01:35 +0300
 image: '/images/post-1-image1.png'
-tags: [work, technology]
+tags: [incident-response]
 ---
 
 # Introduction
