@@ -28,14 +28,57 @@ layout: default
 <!-- begin hero -->
 
 <h1 id="hero-name"></h1>
+
+<style>
+  #hero-name {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    color: white;
+    text-align: center;
+    font-family: monospace;
+    white-space: nowrap;
+    border-right: 3px solid white;
+    padding-right: 5px;
+    overflow: hidden;
+  }
+</style>
+
 <script>
-  const names = [
-    "Ryan O' Riordan",
-    "R. O' Riordan",
-    "Ryan Oriordan",
-    "Cybersecurity Expert Ryan",
-    "Ryan, Your Cybersecurity Guide"
-  ];
+  const name = "Ryan O'Riordan";
+  const heroName = document.getElementById("hero-name");
+  let index = 0;
+  let isDeleting = false;
+  let speed = 150; // typing speed in ms
+
+  function type() {
+    if (!isDeleting) {
+      heroName.textContent = name.slice(0, index + 1);
+      index++;
+      if (index === name.length) {
+        isDeleting = true;
+        speed = 1000; // wait before deleting
+      } else {
+        speed = 150;
+      }
+    } else {
+      heroName.textContent = name.slice(0, index - 1);
+      index--;
+      if (index === 0) {
+        isDeleting = false;
+        speed = 500; // wait before typing again
+      } else {
+        speed = 100;
+      }
+    }
+    setTimeout(type, speed);
+  }
+
+  type();
+</script>
+
 
   let index = 0;
   const heroName = document.getElementById("hero-name");
