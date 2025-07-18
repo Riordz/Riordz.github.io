@@ -27,25 +27,27 @@ layout: default
 {% endif %}
 <!-- begin hero -->
 
-<h1 id="hero-name"></h1>
+<!-- Wrap the hero name in a container -->
+<div id="hero-container" style="
+  height: 100vh; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  background: transparent;
+">
+  <h1 id="hero-name"></h1>
+</div>
 
 <style>
   #hero-name {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     font-size: 3rem;
-    color: #FCFCFC;        /* lighter white */
-    text-align: center;
+    color: #FCFCFC; /* lighter white */
     font-family: monospace;
     white-space: nowrap;
     border-right: 3px solid #FCFCFC;
     padding-right: 5px;
     overflow: hidden;
-    display: inline-block; /* shrink-wrap width */
-    margin: 0;             /* remove default margin */
-    padding: 0;            /* remove default padding */
+    margin: 0; /* remove default margins */
   }
 </style>
 
@@ -54,7 +56,7 @@ layout: default
   const heroName = document.getElementById("hero-name");
   let index = 0;
   let isDeleting = false;
-  let speed = 150; // typing speed in ms
+  let speed = 150;
 
   function type() {
     if (!isDeleting) {
@@ -62,7 +64,7 @@ layout: default
       index++;
       if (index === name.length) {
         isDeleting = true;
-        speed = 1000; // wait before deleting
+        speed = 1000;
       } else {
         speed = 150;
       }
@@ -71,7 +73,7 @@ layout: default
       index--;
       if (index === 0) {
         isDeleting = false;
-        speed = 500; // wait before typing again
+        speed = 500;
       } else {
         speed = 100;
       }
@@ -81,6 +83,7 @@ layout: default
 
   type();
 </script>
+
 
 
 
