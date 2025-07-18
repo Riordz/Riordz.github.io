@@ -36,11 +36,11 @@ layout: default
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 3rem;
-    color: white;
+    color: #FFFAFA;        /* Soft, nice white */
     text-align: center;
     font-family: monospace;
     white-space: nowrap;
-    border-right: 3px solid white;
+    border-right: 3px solid #FFFAFA;
     padding-right: 5px;
     overflow: hidden;
   }
@@ -79,20 +79,6 @@ layout: default
   type();
 </script>
 
-
-  let index = 0;
-  const heroName = document.getElementById("hero-name");
-
-  function rotateName() {
-    heroName.textContent = names[index];
-    index = (index + 1) % names.length;
-  }
-
-  // Start immediately
-  rotateName();
-  // Change every 2 seconds
-  setInterval(rotateName, 2000);
-</script>
 
 
 {% include featured-posts.html %}
