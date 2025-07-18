@@ -36,13 +36,16 @@ layout: default
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 3rem;
-    color: #FFFAFA;        /* Soft, nice white */
+    color: #FCFCFC;        /* lighter white */
     text-align: center;
     font-family: monospace;
     white-space: nowrap;
-    border-right: 3px solid #FFFAFA;
+    border-right: 3px solid #FCFCFC;
     padding-right: 5px;
     overflow: hidden;
+    display: inline-block; /* shrink-wrap width */
+    margin: 0;             /* remove default margin */
+    padding: 0;            /* remove default padding */
   }
 </style>
 
@@ -78,6 +81,7 @@ layout: default
 
   type();
 </script>
+
 
 
 
