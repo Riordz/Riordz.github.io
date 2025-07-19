@@ -30,7 +30,6 @@ layout: default
 <!-- end hero -->
 
 <style>
-  /* Styling the fake terminal prompt */
   #login-prompt {
     font-family: monospace;
     font-size: 1.8rem;
@@ -40,13 +39,17 @@ layout: default
     position: relative;
   }
 
-  /* blinking cursor */
-  #login-prompt::after {
-    content: '|';
-    animation: blink 1s step-start infinite;
-    position: absolute;
-    right: 0;
+  /* blinking cursor as inline element */
+  #cursor {
+    display: inline-block;
     color: #FCFCFC;
+    animation: blink 1s step-start infinite;
+    margin-left: 2px;
+    font-weight: bold;
+  }
+
+  .access-granted {
+    color: #4CAF50; /* nice green */
   }
 
   @keyframes blink {
@@ -59,19 +62,36 @@ layout: default
   const loginPrompt = document.getElementById('login-prompt');
   const usernameText = "Username: Riordz\n";
   const passwordText = "Password: *******";
-  let fullText = usernameText + passwordText;
+  const accessGrantedText = "\nAccess Granted";
+  let fullText = usernameText + passwordText + accessGrantedText;
   let index = 0;
 
   function typeLogin() {
-    if (index <= fullText.length) {
-      loginPrompt.textContent = fullText.slice(0, index);
+    if (index <= usernameText.length + passwordText.length) {
+      // Type username and password normally
+      let text = fullText.slice(0, index);
+      loginPrompt.innerHTML = text.replace(/\n/g, "<br>") + '<span id="cursor">|</span>';
       index++;
       let delay = 100;
-
-      // Add a longer pause after username typed
       if (index === usernameText.length) delay = 1000;
-
       setTimeout(typeLogin, delay);
+
+    } else if (index <= fullText.length) {
+      // Typing "Access Granted" in green
+      let beforeAccess = fullText.slice(0, usernameText.length + passwordText.length);
+      let partialAccess = fullText.slice(usernameText.length + passwordText.length, index);
+      loginPrompt.innerHTML = beforeAccess.replace(/\n/g, "<br>") + 
+                              "<br><span class='access-granted'>" + partialAccess + "</span>" +
+                              '<span id="cursor">|</span>';
+      index++;
+      setTimeout(typeLogin, 150);
+
+    } else {
+      // Finished typing, keep blinking cursor visible at end
+      let beforeAccess = fullText.slice(0, usernameText.length + passwordText.length);
+      loginPrompt.innerHTML = beforeAccess.replace(/\n/g, "<br>") + 
+                              "<br><span class='access-granted'>Access Granted</span>" +
+                              '<span id="cursor">|</span>';
     }
   }
 
