@@ -11,10 +11,7 @@ layout: default
     </div>
     <div class="hero__content">
       <pre id="matrix-terminal"></pre>
-      <div id="specialties" style="display:none; margin-top: 2rem; font-family: 'Courier New', monospace; font-size: 1.6rem; color: #00FFFF; text-align: center; text-shadow:
-          0 0 6px #00ffff,
-          0 0 15px #00e0ff,
-          0 0 20px #00c8ff;">
+      <div id="specialties" style="display:none; margin-top: 2rem; font-family: 'Courier New', monospace; font-size: 1.8rem; color: #008080; text-align: center; animation: pulse 2.5s infinite ease-in-out;">
         Incident Response, Threat Hunting, Malware Analysis
       </div>
       <p class="hero__desc">{{site.hero.description}}</p>
@@ -26,10 +23,7 @@ layout: default
   <div class="hero-inner">
     <div class="hero-content">
       <pre id="matrix-terminal"></pre>
-      <div id="specialties" style="display:none; margin-top: 2rem; font-family: 'Courier New', monospace; font-size: 1.6rem; color: #00FFFF; text-align: center; text-shadow:
-          0 0 6px #00ffff,
-          0 0 15px #00e0ff,
-          0 0 20px #00c8ff;">
+      <div id="specialties" style="display:none; margin-top: 2rem; font-family: 'Courier New', monospace; font-size: 1.8rem; color: #008080; text-align: center; animation: pulse 2.5s infinite ease-in-out;">
         Incident Response, Threat Hunting, Malware Analysis
       </div>
       <p class="hero__desc">{{site.hero.description}}</p>
@@ -44,7 +38,7 @@ layout: default
     font-family: 'Courier New', Courier, monospace;
     font-size: 1.8rem;
     background-color: #000000;
-    color: #00FFFF; /* default teal for main text */
+    color: #00FFFF; /* teal blue for main text */
     padding: 1.5rem 2rem;
     border-radius: 8px;
     box-shadow: 0 0 15px #00ffff;
@@ -53,206 +47,137 @@ layout: default
     overflow-wrap: break-word;
     position: relative;
   }
-
-  /* Grey color for username and password lines */
-  .grey-text {
-    color: #999999;
+  /* Gray color for username and password prompt */
+  .prompt-label {
+    color: #888888;
   }
-
-  #matrix-cursor {
-    display: inline-block;
-    width: 12px;
-    height: 1.8rem;
-    background-color: #00FFFF;
-    animation: blink 1s steps(1) infinite;
-    vertical-align: bottom;
-    margin-left: 2px;
-    border-radius: 2px;
+  /* Teal for user input and asterisks */
+  .user-input {
+    color: #00FFFF;
   }
-
-  @keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
-  }
-
-  /* Teal-blue glowing Access Granted style */
+  /* Access granted styling */
   .access-granted {
-    color: #00FFFF; /* bright cyan/teal */
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    text-shadow:
-      0 0 6px #00ffff,
-      0 0 15px #00e0ff,
-      0 0 20px #00c8ff,
-      0 0 40px #00b0ff,
-      0 0 80px #0098ff,
-      0 0 90px #0080ff;
-    animation: flickerPulse 2.5s infinite ease-in-out, glitchHorizontal 3.5s infinite ease-in-out;
-    display: inline-block;
+    color: #00FFFF;
+    font-weight: bold;
+    animation: glow 1.5s ease-in-out infinite alternate;
   }
-
-  @keyframes flickerPulse {
+  /* Subtle pulse animation for specialties */
+  @keyframes pulse {
     0%, 100% {
-      text-shadow:
-        0 0 5px #00ffff,
-        0 0 12px #00e0ff,
-        0 0 15px #00c8ff,
-        0 0 30px #00b0ff,
-        0 0 50px #0098ff,
-        0 0 60px #0080ff;
-      transform: scale(1);
-      opacity: 0.9;
+      opacity: 1;
+      letter-spacing: normal;
     }
     50% {
-      text-shadow:
-        0 0 10px #00ffff,
-        0 0 25px #00e0ff,
-        0 0 30px #00c8ff,
-        0 0 60px #00b0ff,
-        0 0 90px #0098ff,
-        0 0 110px #0080ff;
-      transform: scale(1.05);
-      opacity: 1;
+      opacity: 0.7;
+      letter-spacing: 0.1em;
     }
   }
-
-  @keyframes glitchHorizontal {
-    0%, 100% {
-      text-shadow:
-        0 0 6px #00ffff,
-        0 0 15px #00e0ff,
-        0 0 20px #00c8ff,
-        0 0 40px #00b0ff,
-        0 0 80px #0098ff,
-        0 0 90px #0080ff;
-      transform: translateX(0);
+  /* Glowing text effect */
+  @keyframes glow {
+    0% {
+      text-shadow: 0 0 5px #00FFFF, 0 0 10px #00CCCC, 0 0 20px #00AAAA;
     }
-    20%, 80% {
-      transform: translateX(-2px);
-      text-shadow:
-        -2px 0 8px #00ffff,
-        2px 0 15px #00e0ff,
-        0 0 20px #00c8ff,
-        0 0 40px #00b0ff,
-        0 0 80px #0098ff,
-        0 0 90px #0080ff;
-    }
-    40%, 60% {
-      transform: translateX(2px);
-      text-shadow:
-        2px 0 8px #00ffff,
-        -2px 0 15px #00e0ff,
-        0 0 20px #00c8ff,
-        0 0 40px #00b0ff,
-        0 0 80px #0098ff,
-        0 0 90px #0080ff;
+    100% {
+      text-shadow: 0 0 20px #00FFFF, 0 0 30px #00CCCC, 0 0 40px #00AAAA;
     }
   }
 </style>
 
 <script>
-  const terminal = document.getElementById('matrix-terminal');
-  const specialties = document.getElementById('specialties');
+  const terminal = document.getElementById("matrix-terminal");
+  const specialties = document.getElementById("specialties");
 
-  // Lines before "Access Granted"
   const lines = [
-    {text: "User: Riordz", grey: true},
-    {text: "Password: *****", grey: true}
+    { label: "User: ", value: "Riordz", colorClass: "user-input" },
+    { label: "Password: ", value: "*****", colorClass: "user-input" }
   ];
 
-  const accessText = "Access Granted";
-
+  const accessGrantedText = "Access granted";
   let lineIndex = 0;
   let charIndex = 0;
-  let currentText = "";
-  let typingSpeed = 90;
+  let typingSpeed = 45;  // faster typing
 
-  function typeMatrix() {
+  function typeLine() {
     if (lineIndex < lines.length) {
-      let line = lines[lineIndex];
-      if (charIndex < line.text.length) {
-        currentText += (charIndex === 0 && line.grey) ? `<span class="grey-text">` : "";
-        currentText += line.text.charAt(charIndex);
+      const line = lines[lineIndex];
+      if (charIndex === 0) {
+        // start new line with label in grey
+        terminal.textContent += `%c${line.label}`;
+      }
+
+      if (charIndex < line.value.length) {
+        terminal.textContent += line.value.charAt(charIndex);
         charIndex++;
-        if(charIndex === line.text.length && line.grey){
-          currentText += "</span>";
-        }
-        updateDisplay(currentText);
-        setTimeout(typeMatrix, typingSpeed);
+        setTimeout(typeLine, typingSpeed);
       } else {
-        currentText += "\n";
-        updateDisplay(currentText);
+        terminal.textContent += "\n";
         lineIndex++;
         charIndex = 0;
-        setTimeout(typeMatrix, 700);
+        setTimeout(typeLine, typingSpeed);
       }
     } else {
-      // After typing User & Password lines, type Access Granted letter by letter with special styling
-      typeAccessGranted(0, "");
+      // After typing username/password
+      setTimeout(() => {
+        terminal.textContent += `%c${accessGrantedText}\n`;
+        specialties.style.display = "block";
+        // Repaint terminal text with styling
+        repaintTerminal();
+      }, 300);
     }
   }
 
-  // Typing "Access Granted" with glow effect
-  function typeAccessGranted(pos, accText) {
-    if (pos <= accessText.length) {
-      let glowPart = `<span class="access-granted">${accText}</span>`;
-      let remainingPart = accessText.slice(pos);
-      let fullText = currentText + glowPart + remainingPart;
+  function repaintTerminal() {
+    // Rebuild terminal content with colors using console trick:
+    // But we can't style inside <pre> easily without HTML,
+    // so let's reconstruct with spans instead of <pre> to style text properly.
+  }
 
-      terminal.innerHTML = fullText.replace(/\n/g, "<br>") + '<span id="matrix-cursor"></span>';
+  // Since styling with %c won't work inside pre element, let's re-implement with spans
 
-      if (pos === accessText.length) {
-        // After fully typed, pause then fade out and show specialties
-        setTimeout(() => {
-          terminal.style.transition = "opacity 1.5s";
-          terminal.style.opacity = "0";
-        }, 1200);
+  function clearAndType() {
+    terminal.innerHTML = ""; // clear
 
-        setTimeout(() => {
-          terminal.style.display = "none";
-          specialties.style.display = "block";
-          specialties.style.opacity = 0;
-          fadeIn(specialties);
-        }, 2800);
+    function typeNextLine() {
+      if (lineIndex < lines.length) {
+        const line = lines[lineIndex];
+        const lineDiv = document.createElement("div");
+
+        const labelSpan = document.createElement("span");
+        labelSpan.className = "prompt-label";
+        labelSpan.textContent = line.label;
+        lineDiv.appendChild(labelSpan);
+
+        terminal.appendChild(lineDiv);
+
+        let charPos = 0;
+
+        function typeChar() {
+          if (charPos < line.value.length) {
+            const charSpan = document.createElement("span");
+            charSpan.className = "user-input";
+            charSpan.textContent = line.value.charAt(charPos);
+            lineDiv.appendChild(charSpan);
+            charPos++;
+            setTimeout(typeChar, typingSpeed);
+          } else {
+            lineIndex++;
+            setTimeout(typeNextLine, typingSpeed);
+          }
+        }
+        typeChar();
       } else {
-        setTimeout(() => typeAccessGranted(pos + 1, accText + accessText.charAt(pos)), typingSpeed);
+        // Show access granted
+        const grantedDiv = document.createElement("div");
+        grantedDiv.className = "access-granted";
+        grantedDiv.textContent = accessGrantedText;
+        terminal.appendChild(grantedDiv);
+
+        specialties.style.display = "block";
       }
     }
+    lineIndex = 0;
+    typeNextLine();
   }
 
-  function updateDisplay(text) {
-    terminal.innerHTML = text.replace(/\n/g, "<br>") + '<span id="matrix-cursor"></span>';
-  }
-
-  // Simple fadeIn animation for specialties text
-  function fadeIn(element, opacity = 0) {
-    opacity += 0.02;
-    element.style.opacity = opacity;
-    if(opacity < 1) {
-      requestAnimationFrame(() => fadeIn(element, opacity));
-    }
-  }
-
-  typeMatrix();
+  clearAndType();
 </script>
-
-{% include featured-posts.html %}
-
-<div class="container">
-  <div class="row">
-    <div class="col col-12">
-      <div class="container__inner">
-        <div class="row grid">
-          {% if site.posts.size > 0 %}
-            {% for post in paginator.posts %}
-              {% include article-content.html %}
-            {% endfor %}
-          {% endif %}
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-{% include pagination.html %}
