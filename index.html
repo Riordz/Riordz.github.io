@@ -28,26 +28,31 @@ layout: default
 <!-- begin hero -->
 
 <!-- Wrap the hero name in a container -->
-<div id="hero-container">
+<!-- Hero Section -->
+<section id="hero-section">
   <h1 id="hero-name"></h1>
-</div>
+</section>
 
 <style>
-  #hero-container {
+  /* Hero section takes 40% of viewport height */
+  #hero-section {
+    height: 40vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 40vh;  /* adjust this height as needed */
+    justify-content: center;  /* center horizontally */
+    align-items: center;      /* center vertically */
+    background-color: transparent; /* or your background */
+    margin-bottom: 2rem;      /* space below hero */
   }
+
   #hero-name {
     font-size: 3rem;
-    color: #FCFCFC;
+    color: #FCFCFC;          /* nice soft white */
     font-family: monospace;
     white-space: nowrap;
-    border-right: 3px solid #FCFCFC;
+    border-right: 3px solid #FCFCFC; /* blinking cursor */
     padding-right: 5px;
     overflow: hidden;
-    margin: 0;
+    margin: 0;               /* no default margins */
   }
 </style>
 
@@ -83,6 +88,7 @@ layout: default
 
   type();
 </script>
+
 
 
 
