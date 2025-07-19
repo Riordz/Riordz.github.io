@@ -35,7 +35,7 @@ layout: default
   #terminal-login {
     max-width: 600px;
     position: absolute;
-    top: 180px;      /* adjust vertical position here */
+    top: 180px;
     left: 50%;
     transform: translateX(-50%);
     padding: 1rem 1rem 2rem 1rem;
@@ -57,11 +57,11 @@ layout: default
   }
 
   .prompt-label {
-    color: #888; /* grey for User and Password labels */
+    color: #888;
   }
 
   .user-input {
-    color: #00bfbf; /* teal blue for inputs */
+    color: #00bfbf;
   }
 
   .access-granted {
@@ -79,6 +79,7 @@ layout: default
     font-family: 'Courier New', monospace;
     font-size: 1.6rem;
     margin-top: 1rem;
+    white-space: pre-wrap;
   }
 
   .file-structure {
@@ -99,7 +100,7 @@ layout: default
   ];
 
   const accessGrantedText = "Access Granted";
-  const typingSpeed = 100;  // ms per character
+  const typingSpeed = 100;
 
   function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -140,20 +141,29 @@ layout: default
     });
   }
 
+  async function typeTextSameLine(text, parentElement, className, charDelay = 20) {
+    return new Promise(async (resolve) => {
+      if (!parentElement.lastChild) {
+        const div = document.createElement("div");
+        if (className) div.className = className;
+        parentElement.appendChild(div);
+      }
+      const lastDiv = parentElement.lastChild;
+      for (let i = 0; i < text.length; i++) {
+        lastDiv.textContent += text.charAt(i);
+        await sleep(charDelay);
+      }
+      resolve();
+    });
+  }
+
   async function showFileStructure() {
-    // Realistic Windows-style dir output with spacing and lines:
-    const fileTree = 
-` Volume in drive C has no label.
- Volume Serial Number is 1234-ABCD
-
- Directory of C:\\
-
-07/19/2025  09:30 AM    <DIR>          Malware Analysis
-07/19/2025  09:30 AM    <DIR>          Incident Response
-07/19/2025  09:30 AM    <DIR>          Threat Hunting
-
-               0 File(s)              0 bytes
-               3 Dir(s)  123,456,789,012 bytes free`;
+    const fileTree =
+`C:
+|
+|-- Malware Analysis
+|-- Incident Response
+|-- Threat Hunting`;
 
     await typeText(fileTree, terminal, "file-structure", 15);
   }
@@ -161,35 +171,27 @@ layout: default
   async function startLoginAnimation() {
     terminal.innerHTML = "";
 
-    // Type username and password lines
     for (let i = 0; i < lines.length; i++) {
       await typeLine(lines[i]);
     }
 
     await sleep(1000);
 
-    // Type Access Granted line
     await typeText(accessGrantedText, terminal, "access-granted", 60);
 
     await sleep(1500);
 
-    // Clear terminal
     terminal.innerHTML = "";
 
-    // Print command prompt ready for input
     const promptDiv = document.createElement("div");
     promptDiv.className = "command-line";
     promptDiv.textContent = "C:\\Users\\Riordz: ";
     terminal.appendChild(promptDiv);
 
-    await sleep(700);
-
-    // Type dir command
-    await typeText("dir", terminal, "command-line", 80);
+    await typeTextSameLine("dir", terminal, "command-line", 80);
 
     await sleep(800);
 
-    // Show file structure
     await showFileStructure();
   }
 
