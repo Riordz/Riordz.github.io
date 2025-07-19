@@ -81,6 +81,13 @@ layout: default
     white-space: pre;
     font-size: 1.2rem; /* smaller font size */
   }
+
+  .command-line {
+    color: #00bfbf;
+    font-family: 'Courier New', monospace;
+    font-size: 1.6rem;
+    margin-top: 1rem;
+  }
 </style>
 
 <script>
@@ -93,7 +100,6 @@ layout: default
 
   const accessGrantedText = "Access Granted";
   const typingSpeed = 100;  // speed of typing (ms per char)
-  let lineIndex = 0;
 
   function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -120,6 +126,20 @@ layout: default
     });
   }
 
+  async function typeText(text, parentElement, className, charDelay = 20) {
+    return new Promise(async (resolve) => {
+      const div = document.createElement("div");
+      if(className) div.className = className;
+      parentElement.appendChild(div);
+
+      for (let i = 0; i < text.length; i++) {
+        div.textContent += text.charAt(i);
+        await sleep(charDelay);
+      }
+      resolve();
+    });
+  }
+
   async function showFileStructure() {
     const fileText = 
 `C:\\
@@ -128,33 +148,34 @@ layout: default
 | - Incident Response
 | - Threat Hunting`;
 
-    const fileDiv = document.createElement("div");
-    fileDiv.className = "file-structure";
-
-    // Animate the file structure letter by letter
-    for (let i = 0; i < fileText.length; i++) {
-      fileDiv.textContent += fileText.charAt(i);
-      terminal.appendChild(fileDiv);
-      await sleep(20); // speed of file text printing
-    }
+    await typeText(fileText, terminal, "file-structure", 20);
   }
 
   async function startLoginAnimation() {
     terminal.innerHTML = "";
 
-    for (; lineIndex < lines.length; lineIndex++) {
+    for(let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
       await typeLine(lines[lineIndex]);
     }
 
-    await sleep(2000);  // wait 1 second before Access Granted
+    await sleep(1000);  // wait 1 second before Access Granted
 
     const grantedDiv = document.createElement("div");
     grantedDiv.className = "access-granted";
     grantedDiv.textContent = accessGrantedText;
     terminal.appendChild(grantedDiv);
 
+    await sleep(1500);
+
+    // Clear terminal for new command prompt
+    terminal.innerHTML = "";
+
+    // Print command prompt line
+    await typeText("C:\\Users\\Riordz: dir", terminal, "command-line", 80);
+
     await sleep(700);
 
+    // Print file structure after command
     await showFileStructure();
   }
 
