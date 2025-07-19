@@ -11,6 +11,12 @@ layout: default
     </div>
     <div class="hero__content">
       <pre id="matrix-terminal"></pre>
+      <div id="specialties" style="display:none; margin-top: 2rem; font-family: 'Courier New', monospace; font-size: 1.6rem; color: #00FFFF; text-align: center; text-shadow:
+          0 0 6px #00ffff,
+          0 0 15px #00e0ff,
+          0 0 20px #00c8ff;">
+        Incident Response, Threat Hunting, Malware Analysis
+      </div>
       <p class="hero__desc">{{site.hero.description}}</p>
     </div>
   </div>
@@ -20,6 +26,12 @@ layout: default
   <div class="hero-inner">
     <div class="hero-content">
       <pre id="matrix-terminal"></pre>
+      <div id="specialties" style="display:none; margin-top: 2rem; font-family: 'Courier New', monospace; font-size: 1.6rem; color: #00FFFF; text-align: center; text-shadow:
+          0 0 6px #00ffff,
+          0 0 15px #00e0ff,
+          0 0 20px #00c8ff;">
+        Incident Response, Threat Hunting, Malware Analysis
+      </div>
       <p class="hero__desc">{{site.hero.description}}</p>
     </div>
   </div>
@@ -32,21 +44,26 @@ layout: default
     font-family: 'Courier New', Courier, monospace;
     font-size: 1.8rem;
     background-color: #000000;
-    color: #00FF41; /* classic matrix green for user/pass */
+    color: #00FFFF; /* default teal for main text */
     padding: 1.5rem 2rem;
     border-radius: 8px;
-    box-shadow: 0 0 15px #00ff41;
+    box-shadow: 0 0 15px #00ffff;
     min-height: 7rem;
     white-space: pre-wrap;
     overflow-wrap: break-word;
     position: relative;
   }
 
+  /* Grey color for username and password lines */
+  .grey-text {
+    color: #999999;
+  }
+
   #matrix-cursor {
     display: inline-block;
     width: 12px;
     height: 1.8rem;
-    background-color: #00FF41;
+    background-color: #00FFFF;
     animation: blink 1s steps(1) infinite;
     vertical-align: bottom;
     margin-left: 2px;
@@ -75,7 +92,6 @@ layout: default
     display: inline-block;
   }
 
-  /* Flicker + pulse: glow intensity & slight scale */
   @keyframes flickerPulse {
     0%, 100% {
       text-shadow:
@@ -101,7 +117,6 @@ layout: default
     }
   }
 
-  /* Subtle horizontal glitch flicker */
   @keyframes glitchHorizontal {
     0%, 100% {
       text-shadow:
@@ -138,11 +153,12 @@ layout: default
 
 <script>
   const terminal = document.getElementById('matrix-terminal');
+  const specialties = document.getElementById('specialties');
 
   // Lines before "Access Granted"
   const lines = [
-    "User: Riordz",
-    "Password: *****"
+    {text: "User: Riordz", grey: true},
+    {text: "Password: *****", grey: true}
   ];
 
   const accessText = "Access Granted";
@@ -155,9 +171,13 @@ layout: default
   function typeMatrix() {
     if (lineIndex < lines.length) {
       let line = lines[lineIndex];
-      if (charIndex < line.length) {
-        currentText += line.charAt(charIndex);
+      if (charIndex < line.text.length) {
+        currentText += (charIndex === 0 && line.grey) ? `<span class="grey-text">` : "";
+        currentText += line.text.charAt(charIndex);
         charIndex++;
+        if(charIndex === line.text.length && line.grey){
+          currentText += "</span>";
+        }
         updateDisplay(currentText);
         setTimeout(typeMatrix, typingSpeed);
       } else {
@@ -176,7 +196,6 @@ layout: default
   // Typing "Access Granted" with glow effect
   function typeAccessGranted(pos, accText) {
     if (pos <= accessText.length) {
-      // Insert the "Access Granted" line with glowing span wrapping typed portion
       let glowPart = `<span class="access-granted">${accText}</span>`;
       let remainingPart = accessText.slice(pos);
       let fullText = currentText + glowPart + remainingPart;
@@ -184,21 +203,18 @@ layout: default
       terminal.innerHTML = fullText.replace(/\n/g, "<br>") + '<span id="matrix-cursor"></span>';
 
       if (pos === accessText.length) {
-        // After fully typed, pause then fade out and restart
+        // After fully typed, pause then fade out and show specialties
         setTimeout(() => {
           terminal.style.transition = "opacity 1.5s";
           terminal.style.opacity = "0";
         }, 1200);
 
         setTimeout(() => {
-          currentText = "";
-          lineIndex = 0;
-          charIndex = 0;
-          terminal.style.opacity = "1";
-          terminal.style.transition = "";
-          updateDisplay(currentText);
-          setTimeout(typeMatrix, 500);
-        }, 3000);
+          terminal.style.display = "none";
+          specialties.style.display = "block";
+          specialties.style.opacity = 0;
+          fadeIn(specialties);
+        }, 2800);
       } else {
         setTimeout(() => typeAccessGranted(pos + 1, accText + accessText.charAt(pos)), typingSpeed);
       }
@@ -207,6 +223,15 @@ layout: default
 
   function updateDisplay(text) {
     terminal.innerHTML = text.replace(/\n/g, "<br>") + '<span id="matrix-cursor"></span>';
+  }
+
+  // Simple fadeIn animation for specialties text
+  function fadeIn(element, opacity = 0) {
+    opacity += 0.02;
+    element.style.opacity = opacity;
+    if(opacity < 1) {
+      requestAnimationFrame(() => fadeIn(element, opacity));
+    }
   }
 
   typeMatrix();
