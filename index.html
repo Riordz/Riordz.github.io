@@ -32,7 +32,7 @@ layout: default
     font-family: 'Courier New', Courier, monospace;
     font-size: 1.8rem;
     background-color: #000000;
-    color: #00FF41; /* classic matrix green */
+    color: #00FF41; /* classic matrix green for user/pass */
     padding: 1.5rem 2rem;
     border-radius: 8px;
     box-shadow: 0 0 15px #00ff41;
@@ -58,41 +58,80 @@ layout: default
     51%, 100% { opacity: 0; }
   }
 
-  /* Access Granted styling */
+  /* Teal-blue glowing Access Granted style */
   .access-granted {
-    color: #7CFC00; /* lighter bright green */
-    font-weight: bold;
+    color: #00FFFF; /* bright cyan/teal */
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
     text-shadow:
-      0 0 5px #7CFC00,
-      0 0 10px #7CFC00,
-      0 0 20px #00FF00,
-      0 0 30px #00FF00,
-      0 0 40px #00FF00;
-    animation: flickerGlow 1.8s infinite alternate;
+      0 0 6px #00ffff,
+      0 0 15px #00e0ff,
+      0 0 20px #00c8ff,
+      0 0 40px #00b0ff,
+      0 0 80px #0098ff,
+      0 0 90px #0080ff;
+    animation: flickerPulse 2.5s infinite ease-in-out, glitchHorizontal 3.5s infinite ease-in-out;
+    display: inline-block;
   }
 
-  @keyframes flickerGlow {
-    0% {
+  /* Flicker + pulse: glow intensity & slight scale */
+  @keyframes flickerPulse {
+    0%, 100% {
       text-shadow:
-        0 0 3px #7CFC00,
-        0 0 7px #7CFC00,
-        0 0 10px #00FF00;
+        0 0 5px #00ffff,
+        0 0 12px #00e0ff,
+        0 0 15px #00c8ff,
+        0 0 30px #00b0ff,
+        0 0 50px #0098ff,
+        0 0 60px #0080ff;
+      transform: scale(1);
       opacity: 0.9;
     }
     50% {
       text-shadow:
-        0 0 8px #7CFC00,
-        0 0 15px #7CFC00,
-        0 0 20px #00FF00,
-        0 0 25px #00FF00;
+        0 0 10px #00ffff,
+        0 0 25px #00e0ff,
+        0 0 30px #00c8ff,
+        0 0 60px #00b0ff,
+        0 0 90px #0098ff,
+        0 0 110px #0080ff;
+      transform: scale(1.05);
       opacity: 1;
     }
-    100% {
+  }
+
+  /* Subtle horizontal glitch flicker */
+  @keyframes glitchHorizontal {
+    0%, 100% {
       text-shadow:
-        0 0 3px #7CFC00,
-        0 0 7px #7CFC00,
-        0 0 10px #00FF00;
-      opacity: 0.9;
+        0 0 6px #00ffff,
+        0 0 15px #00e0ff,
+        0 0 20px #00c8ff,
+        0 0 40px #00b0ff,
+        0 0 80px #0098ff,
+        0 0 90px #0080ff;
+      transform: translateX(0);
+    }
+    20%, 80% {
+      transform: translateX(-2px);
+      text-shadow:
+        -2px 0 8px #00ffff,
+        2px 0 15px #00e0ff,
+        0 0 20px #00c8ff,
+        0 0 40px #00b0ff,
+        0 0 80px #0098ff,
+        0 0 90px #0080ff;
+    }
+    40%, 60% {
+      transform: translateX(2px);
+      text-shadow:
+        2px 0 8px #00ffff,
+        -2px 0 15px #00e0ff,
+        0 0 20px #00c8ff,
+        0 0 40px #00b0ff,
+        0 0 80px #0098ff,
+        0 0 90px #0080ff;
     }
   }
 </style>
