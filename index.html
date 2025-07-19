@@ -10,8 +10,7 @@ layout: default
       <img class="lazy" data-src="{{site.baseurl}}{{site.hero.image}}" alt="{{site.hero.title}}">
     </div>
     <div class="hero__content">
-      <!-- CMD-style fake login prompt -->
-      <pre id="cmd-prompt"></pre>
+      <pre id="matrix-terminal"></pre>
       <p class="hero__desc">{{site.hero.description}}</p>
     </div>
   </div>
@@ -20,7 +19,7 @@ layout: default
 <section class="hero-without-image">
   <div class="hero-inner">
     <div class="hero-content">
-      <pre id="cmd-prompt"></pre>
+      <pre id="matrix-terminal"></pre>
       <p class="hero__desc">{{site.hero.description}}</p>
     </div>
   </div>
@@ -29,125 +28,149 @@ layout: default
 <!-- end hero -->
 
 <style>
-  #cmd-prompt {
-    font-family: "Consolas", "Courier New", monospace;
+  #matrix-terminal {
+    font-family: 'Courier New', Courier, monospace;
     font-size: 1.8rem;
-    color: #FFFFFF;
     background-color: #000000;
+    color: #00FF41; /* classic matrix green */
     padding: 1.5rem 2rem;
-    border-radius: 6px;
-    white-space: pre-wrap;
+    border-radius: 8px;
+    box-shadow: 0 0 15px #00ff41;
     min-height: 7rem;
-    position: relative;
-    box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+    white-space: pre-wrap;
     overflow-wrap: break-word;
+    position: relative;
   }
 
-  /* blinking block cursor */
-  #cursor {
+  #matrix-cursor {
     display: inline-block;
-    background-color: #FFFFFF;
-    width: 10px;
+    width: 12px;
     height: 1.8rem;
+    background-color: #00FF41;
+    animation: blink 1s steps(1) infinite;
     vertical-align: bottom;
-    animation: blinkBlock 1s steps(1) infinite;
     margin-left: 2px;
+    border-radius: 2px;
   }
 
-  .access-granted {
-    color: #4CAF50; /* bright green */
-  }
-
-  @keyframes blinkBlock {
+  @keyframes blink {
     0%, 50% { opacity: 1; }
     51%, 100% { opacity: 0; }
+  }
+
+  /* Access Granted styling */
+  .access-granted {
+    color: #7CFC00; /* lighter bright green */
+    font-weight: bold;
+    text-shadow:
+      0 0 5px #7CFC00,
+      0 0 10px #7CFC00,
+      0 0 20px #00FF00,
+      0 0 30px #00FF00,
+      0 0 40px #00FF00;
+    animation: flickerGlow 1.8s infinite alternate;
+  }
+
+  @keyframes flickerGlow {
+    0% {
+      text-shadow:
+        0 0 3px #7CFC00,
+        0 0 7px #7CFC00,
+        0 0 10px #00FF00;
+      opacity: 0.9;
+    }
+    50% {
+      text-shadow:
+        0 0 8px #7CFC00,
+        0 0 15px #7CFC00,
+        0 0 20px #00FF00,
+        0 0 25px #00FF00;
+      opacity: 1;
+    }
+    100% {
+      text-shadow:
+        0 0 3px #7CFC00,
+        0 0 7px #7CFC00,
+        0 0 10px #00FF00;
+      opacity: 0.9;
+    }
   }
 </style>
 
 <script>
-  const cmdPrompt = document.getElementById('cmd-prompt');
+  const terminal = document.getElementById('matrix-terminal');
 
-  // The lines to type, with prompt prefix for each line
+  // Lines before "Access Granted"
   const lines = [
-    "C:\\Users\\Riordz> Username Riordz",
-    "C:\\Users\\Riordz> Password *******",
-    "C:\\Users\\Riordz> ",
-    "Access Granted"
+    "User: Riordz",
+    "Password: *****"
   ];
 
-  let currentLine = 0;
-  let currentChar = 0;
-  let isDeleting = false;
-  let displayText = "";
-  let typingSpeed = 70;
-  let pauseAfterLine = 1000;
-  let pauseAfterAccess = 2000;
+  const accessText = "Access Granted";
 
-  function typeCMD() {
-    if (currentLine < lines.length) {
-      let line = lines[currentLine];
+  let lineIndex = 0;
+  let charIndex = 0;
+  let currentText = "";
+  let typingSpeed = 90;
 
-      if (!isDeleting) {
-        currentChar++;
-        displayText += line.charAt(currentChar - 1);
-        updateDisplay(displayText, currentLine, currentChar, line.length);
-
-        if (currentChar === line.length) {
-          // Pause at end of line
-          if (currentLine === lines.length - 1) {
-            // Last line (Access Granted)
-            setTimeout(() => {
-              isDeleting = true;
-              currentChar--;
-              typeCMD();
-            }, pauseAfterAccess);
-          } else {
-            setTimeout(() => {
-              currentLine++;
-              currentChar = 0;
-              displayText += "\n";
-              typeCMD();
-            }, pauseAfterLine);
-          }
-        } else {
-          setTimeout(typeCMD, typingSpeed);
-        }
+  function typeMatrix() {
+    if (lineIndex < lines.length) {
+      let line = lines[lineIndex];
+      if (charIndex < line.length) {
+        currentText += line.charAt(charIndex);
+        charIndex++;
+        updateDisplay(currentText);
+        setTimeout(typeMatrix, typingSpeed);
       } else {
-        // Deleting animation
-        displayText = displayText.slice(0, -1);
-        updateDisplay(displayText, currentLine, currentChar, line.length);
-        currentChar--;
-        if (currentChar === 0 && currentLine === 0) {
-          isDeleting = false;
-          currentLine = 0;
-          displayText = "";
-          setTimeout(typeCMD, 500);
-        } else {
-          if (currentChar === 0) {
-            currentLine--;
-            currentChar = lines[currentLine].length;
-          }
-          setTimeout(typeCMD, typingSpeed / 2);
-        }
+        currentText += "\n";
+        updateDisplay(currentText);
+        lineIndex++;
+        charIndex = 0;
+        setTimeout(typeMatrix, 700);
+      }
+    } else {
+      // After typing User & Password lines, type Access Granted letter by letter with special styling
+      typeAccessGranted(0, "");
+    }
+  }
+
+  // Typing "Access Granted" with glow effect
+  function typeAccessGranted(pos, accText) {
+    if (pos <= accessText.length) {
+      // Insert the "Access Granted" line with glowing span wrapping typed portion
+      let glowPart = `<span class="access-granted">${accText}</span>`;
+      let remainingPart = accessText.slice(pos);
+      let fullText = currentText + glowPart + remainingPart;
+
+      terminal.innerHTML = fullText.replace(/\n/g, "<br>") + '<span id="matrix-cursor"></span>';
+
+      if (pos === accessText.length) {
+        // After fully typed, pause then fade out and restart
+        setTimeout(() => {
+          terminal.style.transition = "opacity 1.5s";
+          terminal.style.opacity = "0";
+        }, 1200);
+
+        setTimeout(() => {
+          currentText = "";
+          lineIndex = 0;
+          charIndex = 0;
+          terminal.style.opacity = "1";
+          terminal.style.transition = "";
+          updateDisplay(currentText);
+          setTimeout(typeMatrix, 500);
+        }, 3000);
+      } else {
+        setTimeout(() => typeAccessGranted(pos + 1, accText + accessText.charAt(pos)), typingSpeed);
       }
     }
   }
 
-  // Update display and handle coloring "Access Granted"
-  function updateDisplay(text, lineIndex, charIndex, lineLength) {
-    // Split text into lines for easier manipulation
-    let linesArr = text.split("\n");
-
-    // Color last line "Access Granted" green
-    if (linesArr.length === lines.length && linesArr[lines.length - 1] === "Access Granted") {
-      linesArr[lines.length - 1] = `<span class="access-granted">${linesArr[lines.length - 1]}</span>`;
-    }
-
-    // Join back with <br> and add cursor
-    cmdPrompt.innerHTML = linesArr.join("<br>") + '<span id="cursor"></span>';
+  function updateDisplay(text) {
+    terminal.innerHTML = text.replace(/\n/g, "<br>") + '<span id="matrix-cursor"></span>';
   }
 
-  typeCMD();
+  typeMatrix();
 </script>
 
 {% include featured-posts.html %}
