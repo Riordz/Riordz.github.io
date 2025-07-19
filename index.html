@@ -10,8 +10,8 @@ layout: default
       <img class="lazy" data-src="{{site.baseurl}}{{site.hero.image}}" alt="{{site.hero.title}}">
     </div>
     <div class="hero__content">
-      <!-- Animated hero title -->
-      <h1 class="hero__title" id="hero-name"></h1>
+      <!-- Fake login prompt container -->
+      <pre class="hero__title" id="login-prompt"></pre>
       <p class="hero__desc">{{site.hero.description}}</p>
     </div>
   </div>
@@ -20,8 +20,8 @@ layout: default
 <section class="hero-without-image">
   <div class="hero-inner">
     <div class="hero-content">
-      <!-- Animated hero title -->
-      <h1 class="hero__title" id="hero-name"></h1>
+      <!-- Fake login prompt container -->
+      <pre class="hero__title" id="login-prompt"></pre>
       <p class="hero__desc">{{site.hero.description}}</p>
     </div>
   </div>
@@ -30,26 +30,24 @@ layout: default
 <!-- end hero -->
 
 <style>
-  #hero-name {
-  display: inline-block;
-  position: relative;
-  font-size: 3rem;
-  color: #FCFCFC;
-  font-family: monospace;
-  white-space: nowrap;
-  overflow: hidden;
-  margin: 0;
-  padding-right: 10px;
-}
+  /* Styling the fake terminal prompt */
+  #login-prompt {
+    font-family: monospace;
+    font-size: 1.8rem;
+    color: #FCFCFC;
+    white-space: pre-wrap;
+    margin: 0;
+    position: relative;
+  }
 
-#hero-name::after {
-  content: '|';
-  position: absolute;
-  right: 0;
-  animation: blink 1s step-start infinite;
-  color: #FCFCFC;
-}
-
+  /* blinking cursor */
+  #login-prompt::after {
+    content: '|';
+    animation: blink 1s step-start infinite;
+    position: absolute;
+    right: 0;
+    color: #FCFCFC;
+  }
 
   @keyframes blink {
     0%, 50% { opacity: 1; }
@@ -58,36 +56,26 @@ layout: default
 </style>
 
 <script>
-  const name = "Ryan O'Riordan";
-  const heroName = document.getElementById("hero-name");
+  const loginPrompt = document.getElementById('login-prompt');
+  const usernameText = "Username: Riordz\n";
+  const passwordText = "Password: *******";
+  let fullText = usernameText + passwordText;
   let index = 0;
-  let isDeleting = false;
-  let speed = 150;
 
-  function type() {
-    if (!isDeleting) {
-      heroName.textContent = name.slice(0, index + 1);
+  function typeLogin() {
+    if (index <= fullText.length) {
+      loginPrompt.textContent = fullText.slice(0, index);
       index++;
-      if (index === name.length) {
-        isDeleting = true;
-        speed = 1000;
-      } else {
-        speed = 150;
-      }
-    } else {
-      heroName.textContent = name.slice(0, index - 1);
-      index--;
-      if (index === 0) {
-        isDeleting = false;
-        speed = 500;
-      } else {
-        speed = 100;
-      }
+      let delay = 100;
+
+      // Add a longer pause after username typed
+      if (index === usernameText.length) delay = 1000;
+
+      setTimeout(typeLogin, delay);
     }
-    setTimeout(type, speed);
   }
 
-  type();
+  typeLogin();
 </script>
 
 {% include featured-posts.html %}
