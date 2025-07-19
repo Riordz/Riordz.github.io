@@ -10,7 +10,6 @@ layout: default
       <img class="lazy" data-src="{{site.baseurl}}{{site.hero.image}}" alt="{{site.hero.title}}">
     </div>
     <div class="hero__content">
-      <!-- Fake login prompt container -->
       <pre class="hero__title" id="login-prompt"></pre>
       <p class="hero__desc">{{site.hero.description}}</p>
     </div>
@@ -20,7 +19,6 @@ layout: default
 <section class="hero-without-image">
   <div class="hero-inner">
     <div class="hero-content">
-      <!-- Fake login prompt container -->
       <pre class="hero__title" id="login-prompt"></pre>
       <p class="hero__desc">{{site.hero.description}}</p>
     </div>
@@ -37,15 +35,18 @@ layout: default
     white-space: pre-wrap;
     margin: 0;
     position: relative;
+    min-height: 5.5rem; /* reserve space so content doesn't jump */
+    opacity: 1;
+    transition: opacity 0.5s ease;
   }
 
-  /* blinking cursor as inline element */
+  /* blinking underscore cursor inline */
   #cursor {
     display: inline-block;
     color: #FCFCFC;
     animation: blink 1s step-start infinite;
-    margin-left: 2px;
     font-weight: bold;
+    margin-left: 2px;
   }
 
   .access-granted {
@@ -60,42 +61,61 @@ layout: default
 
 <script>
   const loginPrompt = document.getElementById('login-prompt');
-  const usernameText = "Username: Riordz\n";
-  const passwordText = "Password: *******";
-  const accessGrantedText = "\nAccess Granted";
-  let fullText = usernameText + passwordText + accessGrantedText;
+
+  const fullText = [
+    "Login: ",
+    "Username: Riordz\n",
+    "Password: *******",
+    "\nAccess Granted"
+  ].join("");
+
   let index = 0;
+  let isDeleting = false;
 
-  function typeLogin() {
-    if (index <= usernameText.length + passwordText.length) {
-      // Type username and password normally
-      let text = fullText.slice(0, index);
-      loginPrompt.innerHTML = text.replace(/\n/g, "<br>") + '<span id="cursor">|</span>';
+  function typeLoop() {
+    if (!isDeleting) {
       index++;
-      let delay = 100;
-      if (index === usernameText.length) delay = 1000;
-      setTimeout(typeLogin, delay);
-
-    } else if (index <= fullText.length) {
-      // Typing "Access Granted" in green
-      let beforeAccess = fullText.slice(0, usernameText.length + passwordText.length);
-      let partialAccess = fullText.slice(usernameText.length + passwordText.length, index);
-      loginPrompt.innerHTML = beforeAccess.replace(/\n/g, "<br>") + 
-                              "<br><span class='access-granted'>" + partialAccess + "</span>" +
-                              '<span id="cursor">|</span>';
-      index++;
-      setTimeout(typeLogin, 150);
-
+      if (index > fullText.length) {
+        // Pause then start deleting
+        setTimeout(() => {
+          isDeleting = true;
+          typeLoop();
+        }, 2000);
+        return;
+      }
     } else {
-      // Finished typing, keep blinking cursor visible at end
-      let beforeAccess = fullText.slice(0, usernameText.length + passwordText.length);
-      loginPrompt.innerHTML = beforeAccess.replace(/\n/g, "<br>") + 
-                              "<br><span class='access-granted'>Access Granted</span>" +
-                              '<span id="cursor">|</span>';
+      index--;
+      if (index === 0) {
+        // Pause then start typing
+        setTimeout(() => {
+          isDeleting = false;
+          typeLoop();
+        }, 500);
+        return;
+      }
     }
+
+    // Prepare the text and cursor
+    let currentText = fullText.slice(0, index);
+    // Replace newlines with <br>
+    currentText = currentText.replace(/\n/g, "<br>");
+
+    // Color "Access Granted" green when fully typed
+    let displayHTML;
+    if (index > fullText.indexOf("Access Granted")) {
+      let beforeAccess = currentText.slice(0, fullText.indexOf("Access Granted"));
+      let accessPart = currentText.slice(fullText.indexOf("Access Granted"));
+      displayHTML = beforeAccess + "<span class='access-granted'>" + accessPart + "</span>";
+    } else {
+      displayHTML = currentText;
+    }
+
+    loginPrompt.innerHTML = displayHTML + '<span id="cursor">_</span>';
+
+    setTimeout(typeLoop, isDeleting ? 50 : 120);
   }
 
-  typeLogin();
+  typeLoop();
 </script>
 
 {% include featured-posts.html %}
