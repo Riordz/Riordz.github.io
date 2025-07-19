@@ -29,13 +29,12 @@ layout: default
 <!-- Terminal Login Simulation -->
 <section id="terminal-login">
   <pre id="matrix-terminal"></pre>
-  <div id="specialties">Incident Response — Threat Hunting — Malware Analysis</div>
 </section>
 
 <style>
   #terminal-login {
     max-width: 600px;
-    margin: -2rem auto 1rem auto; /* Move terminal up closer to hero */
+    margin: -4rem auto 1rem auto; /* pushed up more */
     padding: 1rem 1rem 2rem 1rem;
     position: relative;
     z-index: 2;
@@ -52,7 +51,7 @@ layout: default
     padding: 1rem;
     border-radius: 5px;
     white-space: pre-wrap;
-    min-height: 6rem;
+    min-height: 8rem;
   }
 
   .prompt-label {
@@ -72,21 +71,10 @@ layout: default
     font-size: 1.8rem;
     letter-spacing: 1px;
   }
-
-  #specialties {
-    display: none;
-    margin-top: 2rem;
-    font-family: 'Courier New', monospace;
-    font-size: 1.4rem;
-    color: #008080; /* teal blue */
-    text-align: center;
-    padding-bottom: 2rem;
-  }
 </style>
 
 <script>
   const terminal = document.getElementById("matrix-terminal");
-  const specialties = document.getElementById("specialties");
 
   const lines = [
     { label: "User: ", value: "Riordz", colorClass: "user-input" },
@@ -147,9 +135,6 @@ layout: default
           fsLine.textContent = line;
           terminal.appendChild(fsLine);
         });
-
-        // Show specialties below file structure
-        specialties.style.display = "block";
       }, 800);
     }
   }
