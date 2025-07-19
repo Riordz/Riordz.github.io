@@ -35,7 +35,7 @@ layout: default
   #terminal-login {
     max-width: 600px;
     position: absolute;
-    top: 160px;      /* moved down slightly */
+    top: 160px;      /* adjust vertical position */
     left: 50%;
     transform: translateX(-50%);
     padding: 1rem 1rem 2rem 1rem;
@@ -79,7 +79,7 @@ layout: default
     font-family: 'Courier New', monospace;
     margin-top: 1.5rem;
     white-space: pre;
-    font-size: 1.4rem;
+    font-size: 1.2rem; /* smaller font size */
   }
 </style>
 
@@ -126,13 +126,12 @@ layout: default
 ------------------------------
 | - Malware Analysis
 | - Incident Response
-| - Threat Hunting
-------------------------------`;
+| - Threat Hunting`;
 
     const fileDiv = document.createElement("div");
     fileDiv.className = "file-structure";
 
-    // Animate the file structure line by line
+    // Animate the file structure letter by letter
     for (let i = 0; i < fileText.length; i++) {
       fileDiv.textContent += fileText.charAt(i);
       terminal.appendChild(fileDiv);
