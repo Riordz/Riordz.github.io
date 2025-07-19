@@ -10,7 +10,8 @@ layout: default
       <img class="lazy" data-src="{{site.baseurl}}{{site.hero.image}}" alt="{{site.hero.title}}">
     </div>
     <div class="hero__content">
-      <pre class="hero__title" id="login-prompt"></pre>
+      <!-- CMD-style fake login prompt -->
+      <pre id="cmd-prompt"></pre>
       <p class="hero__desc">{{site.hero.description}}</p>
     </div>
   </div>
@@ -19,7 +20,7 @@ layout: default
 <section class="hero-without-image">
   <div class="hero-inner">
     <div class="hero-content">
-      <pre class="hero__title" id="login-prompt"></pre>
+      <pre id="cmd-prompt"></pre>
       <p class="hero__desc">{{site.hero.description}}</p>
     </div>
   </div>
@@ -28,94 +29,125 @@ layout: default
 <!-- end hero -->
 
 <style>
-  #login-prompt {
-    font-family: monospace;
+  #cmd-prompt {
+    font-family: "Consolas", "Courier New", monospace;
     font-size: 1.8rem;
-    color: #FCFCFC;
+    color: #FFFFFF;
+    background-color: #000000;
+    padding: 1.5rem 2rem;
+    border-radius: 6px;
     white-space: pre-wrap;
-    margin: 0;
+    min-height: 7rem;
     position: relative;
-    min-height: 5.5rem; /* reserve space so content doesn't jump */
-    opacity: 1;
-    transition: opacity 0.5s ease;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+    overflow-wrap: break-word;
   }
 
-  /* blinking underscore cursor inline */
+  /* blinking block cursor */
   #cursor {
     display: inline-block;
-    color: #FCFCFC;
-    animation: blink 1s step-start infinite;
-    font-weight: bold;
+    background-color: #FFFFFF;
+    width: 10px;
+    height: 1.8rem;
+    vertical-align: bottom;
+    animation: blinkBlock 1s steps(1) infinite;
     margin-left: 2px;
   }
 
   .access-granted {
-    color: #4CAF50; /* nice green */
+    color: #4CAF50; /* bright green */
   }
 
-  @keyframes blink {
+  @keyframes blinkBlock {
     0%, 50% { opacity: 1; }
     51%, 100% { opacity: 0; }
   }
 </style>
 
 <script>
-  const loginPrompt = document.getElementById('login-prompt');
+  const cmdPrompt = document.getElementById('cmd-prompt');
 
-  const fullText = [
-    "Login: ",
-    "Username: Riordz\n",
-    "Password: *******",
-    "\nAccess Granted"
-  ].join("");
+  // The lines to type, with prompt prefix for each line
+  const lines = [
+    "C:\\Users\\Riordz> Username Riordz",
+    "C:\\Users\\Riordz> Password *******",
+    "C:\\Users\\Riordz> ",
+    "Access Granted"
+  ];
 
-  let index = 0;
+  let currentLine = 0;
+  let currentChar = 0;
   let isDeleting = false;
+  let displayText = "";
+  let typingSpeed = 70;
+  let pauseAfterLine = 1000;
+  let pauseAfterAccess = 2000;
 
-  function typeLoop() {
-    if (!isDeleting) {
-      index++;
-      if (index > fullText.length) {
-        // Pause then start deleting
-        setTimeout(() => {
-          isDeleting = true;
-          typeLoop();
-        }, 2000);
-        return;
-      }
-    } else {
-      index--;
-      if (index === 0) {
-        // Pause then start typing
-        setTimeout(() => {
+  function typeCMD() {
+    if (currentLine < lines.length) {
+      let line = lines[currentLine];
+
+      if (!isDeleting) {
+        currentChar++;
+        displayText += line.charAt(currentChar - 1);
+        updateDisplay(displayText, currentLine, currentChar, line.length);
+
+        if (currentChar === line.length) {
+          // Pause at end of line
+          if (currentLine === lines.length - 1) {
+            // Last line (Access Granted)
+            setTimeout(() => {
+              isDeleting = true;
+              currentChar--;
+              typeCMD();
+            }, pauseAfterAccess);
+          } else {
+            setTimeout(() => {
+              currentLine++;
+              currentChar = 0;
+              displayText += "\n";
+              typeCMD();
+            }, pauseAfterLine);
+          }
+        } else {
+          setTimeout(typeCMD, typingSpeed);
+        }
+      } else {
+        // Deleting animation
+        displayText = displayText.slice(0, -1);
+        updateDisplay(displayText, currentLine, currentChar, line.length);
+        currentChar--;
+        if (currentChar === 0 && currentLine === 0) {
           isDeleting = false;
-          typeLoop();
-        }, 500);
-        return;
+          currentLine = 0;
+          displayText = "";
+          setTimeout(typeCMD, 500);
+        } else {
+          if (currentChar === 0) {
+            currentLine--;
+            currentChar = lines[currentLine].length;
+          }
+          setTimeout(typeCMD, typingSpeed / 2);
+        }
       }
     }
-
-    // Prepare the text and cursor
-    let currentText = fullText.slice(0, index);
-    // Replace newlines with <br>
-    currentText = currentText.replace(/\n/g, "<br>");
-
-    // Color "Access Granted" green when fully typed
-    let displayHTML;
-    if (index > fullText.indexOf("Access Granted")) {
-      let beforeAccess = currentText.slice(0, fullText.indexOf("Access Granted"));
-      let accessPart = currentText.slice(fullText.indexOf("Access Granted"));
-      displayHTML = beforeAccess + "<span class='access-granted'>" + accessPart + "</span>";
-    } else {
-      displayHTML = currentText;
-    }
-
-    loginPrompt.innerHTML = displayHTML + '<span id="cursor">_</span>';
-
-    setTimeout(typeLoop, isDeleting ? 50 : 120);
   }
 
-  typeLoop();
+  // Update display and handle coloring "Access Granted"
+  function updateDisplay(text, lineIndex, charIndex, lineLength) {
+    // Split text into lines for easier manipulation
+    let linesArr = text.split("\n");
+
+    // Color last line "Access Granted" green
+    if (linesArr.length === lines.length && linesArr[lines.length - 1] === "Access Granted") {
+      linesArr[lines.length - 1] = `<span class="access-granted">${linesArr[lines.length - 1]}</span>`;
+    }
+
+    // Join back with <br> and add cursor
+    cmdPrompt.innerHTML = linesArr.join("<br>") + '<span id="cursor"></span>';
+  }
+
+  typeCMD();
 </script>
 
 {% include featured-posts.html %}
