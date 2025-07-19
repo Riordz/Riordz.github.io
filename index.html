@@ -35,7 +35,7 @@ layout: default
   #terminal-login {
     max-width: 600px;
     position: absolute;
-    top: 120px;      /* Adjust this to move the box higher/lower */
+    top: 160px;      /* moved down slightly */
     left: 50%;
     transform: translateX(-50%);
     padding: 1rem 1rem 2rem 1rem;
@@ -57,11 +57,11 @@ layout: default
   }
 
   .prompt-label {
-    color: #888;
+    color: #888; /* grey for User and Password labels */
   }
 
   .user-input {
-    color: #00bfbf;
+    color: #00bfbf; /* teal blue for inputs */
   }
 
   .access-granted {
@@ -75,13 +75,11 @@ layout: default
   }
 
   .file-structure {
-    margin-top: 1rem;
-    font-family: 'Courier New', monospace;
-    font-size: 1.4rem;
     color: #00bfbf;
+    font-family: 'Courier New', monospace;
+    margin-top: 1.5rem;
     white-space: pre;
-    border-top: 1px solid #00bfbf;
-    padding-top: 1rem;
+    font-size: 1.4rem;
   }
 </style>
 
@@ -94,7 +92,7 @@ layout: default
   ];
 
   const accessGrantedText = "Access Granted";
-  const typingSpeed = 90;  // around 25 wpm (adjust to your liking)
+  const typingSpeed = 100;  // speed of typing (ms per char)
   let lineIndex = 0;
 
   function sleep(ms) {
@@ -102,34 +100,44 @@ layout: default
   }
 
   async function typeLine(line) {
-    const lineDiv = document.createElement("div");
-    const labelSpan = document.createElement("span");
-    labelSpan.className = "prompt-label";
-    labelSpan.textContent = line.label;
-    lineDiv.appendChild(labelSpan);
-    terminal.appendChild(lineDiv);
+    return new Promise(async (resolve) => {
+      const lineDiv = document.createElement("div");
+      const labelSpan = document.createElement("span");
+      labelSpan.className = "prompt-label";
+      labelSpan.textContent = line.label;
+      lineDiv.appendChild(labelSpan);
+      terminal.appendChild(lineDiv);
 
-    for (let i = 0; i < line.value.length; i++) {
-      const charSpan = document.createElement("span");
-      charSpan.className = line.colorClass;
-      charSpan.textContent = line.value.charAt(i);
-      lineDiv.appendChild(charSpan);
-      await sleep(typingSpeed);
-    }
+      for (let i = 0; i < line.value.length; i++) {
+        const charSpan = document.createElement("span");
+        charSpan.className = line.colorClass;
+        charSpan.textContent = line.value.charAt(i);
+        lineDiv.appendChild(charSpan);
+        await sleep(typingSpeed);
+      }
+      await sleep(typingSpeed * 3);
+      resolve();
+    });
   }
 
   async function showFileStructure() {
-    const fileStructure = `
-C:\\
+    const fileText = 
+`C:\\
 ------------------------------
 | - Malware Analysis
 | - Incident Response
 | - Threat Hunting
-`;
+------------------------------`;
+
     const fileDiv = document.createElement("div");
     fileDiv.className = "file-structure";
-    fileDiv.textContent = fileStructure;
-    terminal.appendChild(fileDiv);
+
+    // Animate the file structure line by line
+    for (let i = 0; i < fileText.length; i++) {
+      fileDiv.textContent += fileText.charAt(i);
+      terminal.appendChild(fileDiv);
+      await sleep(20); // speed of file text printing
+    }
   }
 
   async function startLoginAnimation() {
@@ -139,7 +147,8 @@ C:\\
       await typeLine(lines[lineIndex]);
     }
 
-    // Show access granted
+    await sleep(1000);  // wait 1 second before Access Granted
+
     const grantedDiv = document.createElement("div");
     grantedDiv.className = "access-granted";
     grantedDiv.textContent = accessGrantedText;
@@ -147,7 +156,6 @@ C:\\
 
     await sleep(700);
 
-    // Show file structure after Access Granted
     await showFileStructure();
   }
 
