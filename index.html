@@ -26,6 +26,7 @@ layout: default
 </section>
 {% endif %}
 
+<!-- Terminal Login Simulation -->
 <section id="terminal-login">
   <pre id="matrix-terminal"></pre>
 </section>
@@ -33,10 +34,12 @@ layout: default
 <style>
   #terminal-login {
     max-width: 600px;
-    margin: -8rem auto 1rem auto; /* pushed up */
+    position: absolute;
+    top: 120px;      /* Adjust this to move the box higher/lower */
+    left: 50%;
+    transform: translateX(-50%);
     padding: 1rem 1rem 2rem 1rem;
-    position: relative;
-    z-index: 2;
+    z-index: 9999;
     background-color: #000;
     border-radius: 10px;
     box-shadow: 0 0 10px #00bfbf;
@@ -50,7 +53,7 @@ layout: default
     padding: 1rem;
     border-radius: 5px;
     white-space: pre-wrap;
-    min-height: 8rem;
+    min-height: 6rem;
   }
 
   .prompt-label {
@@ -70,6 +73,16 @@ layout: default
     font-size: 1.8rem;
     letter-spacing: 1px;
   }
+
+  .file-structure {
+    margin-top: 1rem;
+    font-family: 'Courier New', monospace;
+    font-size: 1.4rem;
+    color: #00bfbf;
+    white-space: pre;
+    border-top: 1px solid #00bfbf;
+    padding-top: 1rem;
+  }
 </style>
 
 <script>
@@ -81,64 +94,61 @@ layout: default
   ];
 
   const accessGrantedText = "Access Granted";
-  const fileStructure = [
-    "C:\\>",
-    "├── Malware Analysis",
-    "├── Incident Response",
-    "└── Threat Hunting"
-  ];
-
-  const typingSpeed = 100;
+  const typingSpeed = 90;  // around 25 wpm (adjust to your liking)
   let lineIndex = 0;
 
-  function typeLine() {
-    if (lineIndex < lines.length) {
-      const line = lines[lineIndex];
-      const lineDiv = document.createElement("div");
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
-      const labelSpan = document.createElement("span");
-      labelSpan.className = "prompt-label";
-      labelSpan.textContent = line.label;
-      lineDiv.appendChild(labelSpan);
-      terminal.appendChild(lineDiv);
+  async function typeLine(line) {
+    const lineDiv = document.createElement("div");
+    const labelSpan = document.createElement("span");
+    labelSpan.className = "prompt-label";
+    labelSpan.textContent = line.label;
+    lineDiv.appendChild(labelSpan);
+    terminal.appendChild(lineDiv);
 
-      let charPos = 0;
-
-      function typeChar() {
-        if (charPos < line.value.length) {
-          const charSpan = document.createElement("span");
-          charSpan.className = line.colorClass;
-          charSpan.textContent = line.value.charAt(charPos);
-          lineDiv.appendChild(charSpan);
-          charPos++;
-          setTimeout(typeChar, typingSpeed);
-        } else {
-          lineIndex++;
-          setTimeout(typeLine, typingSpeed);
-        }
-      }
-
-      typeChar();
-    } else {
-      const grantedDiv = document.createElement("div");
-      grantedDiv.className = "access-granted";
-      grantedDiv.textContent = accessGrantedText;
-      terminal.appendChild(grantedDiv);
-
-      setTimeout(() => {
-        fileStructure.forEach(line => {
-          const fsLine = document.createElement("div");
-          fsLine.className = "user-input";
-          fsLine.textContent = line;
-          terminal.appendChild(fsLine);
-        });
-      }, 800);
+    for (let i = 0; i < line.value.length; i++) {
+      const charSpan = document.createElement("span");
+      charSpan.className = line.colorClass;
+      charSpan.textContent = line.value.charAt(i);
+      lineDiv.appendChild(charSpan);
+      await sleep(typingSpeed);
     }
   }
 
-  function startLoginAnimation() {
+  async function showFileStructure() {
+    const fileStructure = `
+C:\\
+------------------------------
+| - Malware Analysis
+| - Incident Response
+| - Threat Hunting
+`;
+    const fileDiv = document.createElement("div");
+    fileDiv.className = "file-structure";
+    fileDiv.textContent = fileStructure;
+    terminal.appendChild(fileDiv);
+  }
+
+  async function startLoginAnimation() {
     terminal.innerHTML = "";
-    typeLine();
+
+    for (; lineIndex < lines.length; lineIndex++) {
+      await typeLine(lines[lineIndex]);
+    }
+
+    // Show access granted
+    const grantedDiv = document.createElement("div");
+    grantedDiv.className = "access-granted";
+    grantedDiv.textContent = accessGrantedText;
+    terminal.appendChild(grantedDiv);
+
+    await sleep(700);
+
+    // Show file structure after Access Granted
+    await showFileStructure();
   }
 
   startLoginAnimation();
