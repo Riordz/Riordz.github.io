@@ -10,7 +10,7 @@ layout: default
       <img class="lazy" data-src="{{site.baseurl}}{{site.hero.image}}" alt="{{site.hero.title}}">
     </div>
     <div class="hero__content">
-      <!-- Replace static title with animated name -->
+      <!-- Animated hero title -->
       <h1 class="hero__title" id="hero-name"></h1>
       <p class="hero__desc">{{site.hero.description}}</p>
     </div>
@@ -20,7 +20,7 @@ layout: default
 <section class="hero-without-image">
   <div class="hero-inner">
     <div class="hero-content">
-      <!-- Replace static title with animated name -->
+      <!-- Animated hero title -->
       <h1 class="hero__title" id="hero-name"></h1>
       <p class="hero__desc">{{site.hero.description}}</p>
     </div>
@@ -30,16 +30,29 @@ layout: default
 <!-- end hero -->
 
 <style>
-  /* Style the animated hero name */
   #hero-name {
     font-size: 3rem;
     color: #FCFCFC;
     font-family: monospace;
     white-space: nowrap;
-    border-right: 3px solid #FCFCFC; /* blinking cursor */
-    padding-right: 5px;
     overflow: hidden;
     margin: 0;
+    padding-right: 10px; /* space for cursor */
+    position: relative;
+  }
+
+  /* Blinking cursor */
+  #hero-name::after {
+    content: '|';
+    position: absolute;
+    right: 0;
+    animation: blink 1s step-start infinite;
+    color: #FCFCFC;
+  }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
   }
 </style>
 
