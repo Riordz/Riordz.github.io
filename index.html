@@ -34,25 +34,28 @@ layout: default
 </section>
 
 <style>
-  /* Hero section takes 40% of viewport height */
+  /* Ensure hero fills part of viewport height */
   #hero-section {
-    height: 40vh;
+    position: relative;
+    height: 40vh;            /* adjust height as needed */
     display: flex;
-    justify-content: center;  /* center horizontally */
-    align-items: center;      /* center vertically */
-    background-color: transparent; /* or your background */
-    margin-bottom: 2rem;      /* space below hero */
+    justify-content: center;
+    align-items: center;
+    background-color: transparent; /* or your hero background */
+    z-index: 10;             /* bring above other content */
+    margin-bottom: 4rem;     /* space below hero */
   }
 
+  /* Hero name styling */
   #hero-name {
     font-size: 3rem;
-    color: #FCFCFC;          /* nice soft white */
+    color: #FCFCFC;
     font-family: monospace;
     white-space: nowrap;
-    border-right: 3px solid #FCFCFC; /* blinking cursor */
+    border-right: 3px solid #FCFCFC; /* cursor */
     padding-right: 5px;
     overflow: hidden;
-    margin: 0;               /* no default margins */
+    margin: 0;
   }
 </style>
 
@@ -88,6 +91,7 @@ layout: default
 
   type();
 </script>
+
 
 
 
