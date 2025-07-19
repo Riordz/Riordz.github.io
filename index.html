@@ -10,10 +10,7 @@ layout: default
       <img class="lazy" data-src="{{site.baseurl}}{{site.hero.image}}" alt="{{site.hero.title}}">
     </div>
     <div class="hero__content">
-      <pre id="matrix-terminal"></pre>
-      <div id="specialties" style="display:none; margin-top: 2rem; font-family: 'Courier New', monospace; font-size: 1.8rem; color: #008080; text-align: center; animation: pulse 2.5s infinite ease-in-out;">
-        Incident Response, Threat Hunting, Malware Analysis
-      </div>
+      <h1 class="hero__title">{{site.hero.title}}</h1>
       <p class="hero__desc">{{site.hero.description}}</p>
     </div>
   </div>
@@ -22,10 +19,7 @@ layout: default
 <section class="hero-without-image">
   <div class="hero-inner">
     <div class="hero-content">
-      <pre id="matrix-terminal"></pre>
-      <div id="specialties" style="display:none; margin-top: 2rem; font-family: 'Courier New', monospace; font-size: 1.8rem; color: #008080; text-align: center; animation: pulse 2.5s infinite ease-in-out;">
-        Incident Response, Threat Hunting, Malware Analysis
-      </div>
+      <h1 class="hero__title">{{site.hero.title}}</h1>
       <p class="hero__desc">{{site.hero.description}}</p>
     </div>
   </div>
@@ -33,12 +27,45 @@ layout: default
 {% endif %}
 <!-- end hero -->
 
+<!-- FEATURED POSTS - Keep them visible, up top -->
+<div class="featured-posts-container" style="margin-top: 1rem; margin-bottom: 3rem;">
+  {% include featured-posts.html %}
+</div>
+
+<!-- TERMINAL LOGIN ANIMATION BELOW FEATURED POSTS -->
+<section id="terminal-login" style="max-width: 600px; margin: 0 auto 3rem auto;">
+  <pre id="matrix-terminal"></pre>
+  <div id="specialties" style="display:none; margin-top: 2rem; font-family: 'Courier New', monospace; font-size: 1.8rem; color: #008080; text-align: center; animation: pulse 2.5s infinite ease-in-out;">
+    Incident Response, Threat Hunting, Malware Analysis
+  </div>
+</section>
+
+<!-- BLOG POSTS -->
+<div class="container">
+  <div class="row">
+    <div class="col col-12">
+      <div class="container__inner">
+        <div class="row grid">
+          {% if site.posts.size > 0 %}
+            {% for post in paginator.posts %}
+              {% include article-content.html %}
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include pagination.html %}
+
 <style>
+  /* Terminal styles */
   #matrix-terminal {
     font-family: 'Courier New', Courier, monospace;
     font-size: 1.8rem;
     background-color: #000000;
-    color: #00FFFF; /* teal blue for main text */
+    color: #00FFFF; /* teal blue */
     padding: 1.5rem 2rem;
     border-radius: 8px;
     box-shadow: 0 0 15px #00ffff;
@@ -47,21 +74,17 @@ layout: default
     overflow-wrap: break-word;
     position: relative;
   }
-  /* Gray color for username and password prompt */
   .prompt-label {
-    color: #888888;
+    color: #888888; /* grey for prompt */
   }
-  /* Teal for user input and asterisks */
   .user-input {
-    color: #00FFFF;
+    color: #00FFFF; /* teal for input */
   }
-  /* Access granted styling */
   .access-granted {
     color: #00FFFF;
     font-weight: bold;
     animation: glow 1.5s ease-in-out infinite alternate;
   }
-  /* Subtle pulse animation for specialties */
   @keyframes pulse {
     0%, 100% {
       opacity: 1;
@@ -72,7 +95,6 @@ layout: default
       letter-spacing: 0.1em;
     }
   }
-  /* Glowing text effect */
   @keyframes glow {
     0% {
       text-shadow: 0 0 5px #00FFFF, 0 0 10px #00CCCC, 0 0 20px #00AAAA;
@@ -94,45 +116,7 @@ layout: default
 
   const accessGrantedText = "Access granted";
   let lineIndex = 0;
-  let charIndex = 0;
   let typingSpeed = 45;  // faster typing
-
-  function typeLine() {
-    if (lineIndex < lines.length) {
-      const line = lines[lineIndex];
-      if (charIndex === 0) {
-        // start new line with label in grey
-        terminal.textContent += `%c${line.label}`;
-      }
-
-      if (charIndex < line.value.length) {
-        terminal.textContent += line.value.charAt(charIndex);
-        charIndex++;
-        setTimeout(typeLine, typingSpeed);
-      } else {
-        terminal.textContent += "\n";
-        lineIndex++;
-        charIndex = 0;
-        setTimeout(typeLine, typingSpeed);
-      }
-    } else {
-      // After typing username/password
-      setTimeout(() => {
-        terminal.textContent += `%c${accessGrantedText}\n`;
-        specialties.style.display = "block";
-        // Repaint terminal text with styling
-        repaintTerminal();
-      }, 300);
-    }
-  }
-
-  function repaintTerminal() {
-    // Rebuild terminal content with colors using console trick:
-    // But we can't style inside <pre> easily without HTML,
-    // so let's reconstruct with spans instead of <pre> to style text properly.
-  }
-
-  // Since styling with %c won't work inside pre element, let's re-implement with spans
 
   function clearAndType() {
     terminal.innerHTML = ""; // clear
