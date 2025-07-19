@@ -35,7 +35,7 @@ layout: default
 <style>
   #terminal-login {
     max-width: 600px;
-    margin: 0.5rem auto -1rem auto;
+    margin: -2rem auto 1rem auto; /* Move terminal up closer to hero */
     padding: 1rem 1rem 2rem 1rem;
     position: relative;
     z-index: 2;
@@ -56,11 +56,11 @@ layout: default
   }
 
   .prompt-label {
-    color: #888;
+    color: #888; /* grey for "User:" and "Password:" */
   }
 
   .user-input {
-    color: #00bfbf;
+    color: #00bfbf; /* teal for user input and file structure */
   }
 
   .access-granted {
@@ -78,7 +78,7 @@ layout: default
     margin-top: 2rem;
     font-family: 'Courier New', monospace;
     font-size: 1.4rem;
-    color: #008080;
+    color: #008080; /* teal blue */
     text-align: center;
     padding-bottom: 2rem;
   }
@@ -94,49 +94,68 @@ layout: default
   ];
 
   const accessGrantedText = "Access Granted";
-  const typingSpeed = 150;
+  const fileStructure = [
+    "C:\\>",
+    "├── Malware Analysis",
+    "├── Incident Response",
+    "└── Threat Hunting"
+  ];
+
+  const typingSpeed = 100;
   let lineIndex = 0;
+
+  function typeLine() {
+    if (lineIndex < lines.length) {
+      const line = lines[lineIndex];
+      const lineDiv = document.createElement("div");
+
+      const labelSpan = document.createElement("span");
+      labelSpan.className = "prompt-label";
+      labelSpan.textContent = line.label;
+      lineDiv.appendChild(labelSpan);
+      terminal.appendChild(lineDiv);
+
+      let charPos = 0;
+
+      function typeChar() {
+        if (charPos < line.value.length) {
+          const charSpan = document.createElement("span");
+          charSpan.className = line.colorClass;
+          charSpan.textContent = line.value.charAt(charPos);
+          lineDiv.appendChild(charSpan);
+          charPos++;
+          setTimeout(typeChar, typingSpeed);
+        } else {
+          lineIndex++;
+          setTimeout(typeLine, typingSpeed);
+        }
+      }
+
+      typeChar();
+    } else {
+      // Show "Access Granted"
+      const grantedDiv = document.createElement("div");
+      grantedDiv.className = "access-granted";
+      grantedDiv.textContent = accessGrantedText;
+      terminal.appendChild(grantedDiv);
+
+      // Show file structure after a short delay
+      setTimeout(() => {
+        fileStructure.forEach((line) => {
+          const fsLine = document.createElement("div");
+          fsLine.className = "user-input";
+          fsLine.textContent = line;
+          terminal.appendChild(fsLine);
+        });
+
+        // Show specialties below file structure
+        specialties.style.display = "block";
+      }, 800);
+    }
+  }
 
   function startLoginAnimation() {
     terminal.innerHTML = "";
-
-    function typeLine() {
-      if (lineIndex < lines.length) {
-        const line = lines[lineIndex];
-        const lineDiv = document.createElement("div");
-
-        const labelSpan = document.createElement("span");
-        labelSpan.className = "prompt-label";
-        labelSpan.textContent = line.label;
-        lineDiv.appendChild(labelSpan);
-        terminal.appendChild(lineDiv);
-
-        let charPos = 0;
-
-        function typeChar() {
-          if (charPos < line.value.length) {
-            const charSpan = document.createElement("span");
-            charSpan.className = line.colorClass;
-            charSpan.textContent = line.value.charAt(charPos);
-            lineDiv.appendChild(charSpan);
-            charPos++;
-            setTimeout(typeChar, typingSpeed);
-          } else {
-            lineIndex++;
-            setTimeout(typeLine, typingSpeed);
-          }
-        }
-
-        typeChar();
-      } else {
-        const grantedDiv = document.createElement("div");
-        grantedDiv.className = "access-granted";
-        grantedDiv.textContent = accessGrantedText;
-        terminal.appendChild(grantedDiv);
-        specialties.style.display = "block";
-      }
-    }
-
     typeLine();
   }
 
