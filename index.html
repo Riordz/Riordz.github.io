@@ -2,7 +2,7 @@
 layout: default
 ---
 
-<!-- begin hero -->
+<!-- Hero Section -->
 {% if site.hero.image %}
 <section class="hero">
   <div class="hero__inner">
@@ -25,22 +25,128 @@ layout: default
   </div>
 </section>
 {% endif %}
-<!-- end hero -->
 
-<!-- FEATURED POSTS - keep margin below it -->
-<div class="featured-posts-container" style="margin-top: 1rem; margin-bottom: 4rem; position: relative; z-index: 1;">
-  {% include featured-posts.html %}
-</div>
-
-<!-- TERMINAL LOGIN ANIMATION BELOW FEATURED POSTS -->
-<section id="terminal-login" style="max-width: 600px; margin: -2rem auto 3rem auto; position: relative; z-index: 0;">
+<!-- Terminal Login Simulation -->
+<section id="terminal-login">
   <pre id="matrix-terminal"></pre>
-  <div id="specialties" style="display:none; margin-top: 2rem; font-family: 'Courier New', monospace; font-size: 1.8rem; color: #008080; text-align: center; animation: pulse 2.5s infinite ease-in-out;">
-    Incident Response, Threat Hunting, Malware Analysis
-  </div>
+  <div id="specialties">Incident Response — Threat Hunting — Malware Analysis</div>
 </section>
 
-<!-- BLOG POSTS -->
+<style>
+  #terminal-login {
+    max-width: 600px;
+    margin: 0.5rem auto -1rem auto;
+    padding: 1rem 1rem 2rem 1rem;
+    position: relative;
+    z-index: 2;
+    background-color: #000;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #00bfbf;
+  }
+
+  #matrix-terminal {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.6rem;
+    background-color: #000;
+    color: #00bfbf;
+    padding: 1rem;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    min-height: 6rem;
+  }
+
+  .prompt-label {
+    color: #888;
+  }
+
+  .user-input {
+    color: #00bfbf;
+  }
+
+  .access-granted {
+    color: #00bfbf;
+    font-weight: bold;
+    border-top: 1px solid #00bfbf;
+    padding-top: 1rem;
+    margin-top: 1rem;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+
+  #specialties {
+    display: none;
+    margin-top: 2rem;
+    font-family: 'Courier New', monospace;
+    font-size: 1.4rem;
+    color: #008080;
+    text-align: center;
+    padding-bottom: 2rem;
+  }
+</style>
+
+<script>
+  const terminal = document.getElementById("matrix-terminal");
+  const specialties = document.getElementById("specialties");
+
+  const lines = [
+    { label: "User: ", value: "Riordz", colorClass: "user-input" },
+    { label: "Password: ", value: "*****", colorClass: "user-input" }
+  ];
+
+  const accessGrantedText = "Access Granted";
+  const typingSpeed = 150;
+  let lineIndex = 0;
+
+  function startLoginAnimation() {
+    terminal.innerHTML = "";
+
+    function typeLine() {
+      if (lineIndex < lines.length) {
+        const line = lines[lineIndex];
+        const lineDiv = document.createElement("div");
+
+        const labelSpan = document.createElement("span");
+        labelSpan.className = "prompt-label";
+        labelSpan.textContent = line.label;
+        lineDiv.appendChild(labelSpan);
+        terminal.appendChild(lineDiv);
+
+        let charPos = 0;
+
+        function typeChar() {
+          if (charPos < line.value.length) {
+            const charSpan = document.createElement("span");
+            charSpan.className = line.colorClass;
+            charSpan.textContent = line.value.charAt(charPos);
+            lineDiv.appendChild(charSpan);
+            charPos++;
+            setTimeout(typeChar, typingSpeed);
+          } else {
+            lineIndex++;
+            setTimeout(typeLine, typingSpeed);
+          }
+        }
+
+        typeChar();
+      } else {
+        const grantedDiv = document.createElement("div");
+        grantedDiv.className = "access-granted";
+        grantedDiv.textContent = accessGrantedText;
+        terminal.appendChild(grantedDiv);
+        specialties.style.display = "block";
+      }
+    }
+
+    typeLine();
+  }
+
+  startLoginAnimation();
+</script>
+
+<!-- Featured Posts -->
+{% include featured-posts.html %}
+
+<!-- Post Grid -->
 <div class="container">
   <div class="row">
     <div class="col col-12">
@@ -58,110 +164,3 @@ layout: default
 </div>
 
 {% include pagination.html %}
-
-<style>
-  /* Terminal styles */
-  #matrix-terminal {
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 1.8rem;
-    background-color: #000000;
-    color: #00FFFF; /* teal blue */
-    padding: 1.5rem 2rem;
-    border-radius: 8px;
-    box-shadow: 0 0 15px #00ffff;
-    min-height: 7rem;
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-    position: relative;
-  }
-  .prompt-label {
-    color: #888888; /* grey for prompt */
-  }
-  .user-input {
-    color: #00FFFF; /* teal for input */
-  }
-  .access-granted {
-    color: #00FFFF;
-    font-weight: bold;
-    animation: glow 1.5s ease-in-out infinite alternate;
-  }
-  @keyframes pulse {
-    0%, 100% {
-      opacity: 1;
-      letter-spacing: normal;
-    }
-    50% {
-      opacity: 0.7;
-      letter-spacing: 0.1em;
-    }
-  }
-  @keyframes glow {
-    0% {
-      text-shadow: 0 0 5px #00FFFF, 0 0 10px #00CCCC, 0 0 20px #00AAAA;
-    }
-    100% {
-      text-shadow: 0 0 20px #00FFFF, 0 0 30px #00CCCC, 0 0 40px #00AAAA;
-    }
-  }
-</style>
-
-<script>
-  const terminal = document.getElementById("matrix-terminal");
-  const specialties = document.getElementById("specialties");
-
-  const lines = [
-    { label: "User: ", value: "Riordz", colorClass: "user-input" },
-    { label: "Password: ", value: "*****", colorClass: "user-input" }
-  ];
-
-  const accessGrantedText = "Access granted";
-  let lineIndex = 0;
-  let typingSpeed = 45;  // faster typing
-
-  function clearAndType() {
-    terminal.innerHTML = ""; // clear
-
-    function typeNextLine() {
-      if (lineIndex < lines.length) {
-        const line = lines[lineIndex];
-        const lineDiv = document.createElement("div");
-
-        const labelSpan = document.createElement("span");
-        labelSpan.className = "prompt-label";
-        labelSpan.textContent = line.label;
-        lineDiv.appendChild(labelSpan);
-
-        terminal.appendChild(lineDiv);
-
-        let charPos = 0;
-
-        function typeChar() {
-          if (charPos < line.value.length) {
-            const charSpan = document.createElement("span");
-            charSpan.className = "user-input";
-            charSpan.textContent = line.value.charAt(charPos);
-            lineDiv.appendChild(charSpan);
-            charPos++;
-            setTimeout(typeChar, typingSpeed);
-          } else {
-            lineIndex++;
-            setTimeout(typeNextLine, typingSpeed);
-          }
-        }
-        typeChar();
-      } else {
-        // Show access granted
-        const grantedDiv = document.createElement("div");
-        grantedDiv.className = "access-granted";
-        grantedDiv.textContent = accessGrantedText;
-        terminal.appendChild(grantedDiv);
-
-        specialties.style.display = "block";
-      }
-    }
-    lineIndex = 0;
-    typeNextLine();
-  }
-
-  clearAndType();
-</script>
