@@ -27,13 +27,13 @@ layout: default
 {% endif %}
 <!-- end hero -->
 
-<!-- FEATURED POSTS - Keep them visible, up top -->
-<div class="featured-posts-container" style="margin-top: 1rem; margin-bottom: 3rem;">
+<!-- FEATURED POSTS - keep margin below it -->
+<div class="featured-posts-container" style="margin-top: 1rem; margin-bottom: 4rem; position: relative; z-index: 1;">
   {% include featured-posts.html %}
 </div>
 
 <!-- TERMINAL LOGIN ANIMATION BELOW FEATURED POSTS -->
-<section id="terminal-login" style="max-width: 600px; margin: 0 auto 3rem auto;">
+<section id="terminal-login" style="max-width: 600px; margin: -2rem auto 3rem auto; position: relative; z-index: 0;">
   <pre id="matrix-terminal"></pre>
   <div id="specialties" style="display:none; margin-top: 2rem; font-family: 'Courier New', monospace; font-size: 1.8rem; color: #008080; text-align: center; animation: pulse 2.5s infinite ease-in-out;">
     Incident Response, Threat Hunting, Malware Analysis
@@ -116,7 +116,7 @@ layout: default
 
   const accessGrantedText = "Access granted";
   let lineIndex = 0;
-  let typingSpeed = 35;  // faster typing
+  let typingSpeed = 25;  // faster typing
 
   function clearAndType() {
     terminal.innerHTML = ""; // clear
