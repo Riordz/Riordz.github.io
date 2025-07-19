@@ -26,7 +26,6 @@ layout: default
 </section>
 {% endif %}
 
-<!-- Terminal Login Simulation -->
 <section id="terminal-login">
   <pre id="matrix-terminal"></pre>
 </section>
@@ -34,7 +33,7 @@ layout: default
 <style>
   #terminal-login {
     max-width: 600px;
-    margin: -8rem auto 1rem auto; /* pushed up more */
+    margin: -8rem auto 1rem auto; /* pushed up */
     padding: 1rem 1rem 2rem 1rem;
     position: relative;
     z-index: 2;
@@ -55,11 +54,11 @@ layout: default
   }
 
   .prompt-label {
-    color: #888; /* grey for "User:" and "Password:" */
+    color: #888;
   }
 
   .user-input {
-    color: #00bfbf; /* teal for user input and file structure */
+    color: #00bfbf;
   }
 
   .access-granted {
@@ -121,15 +120,13 @@ layout: default
 
       typeChar();
     } else {
-      // Show "Access Granted"
       const grantedDiv = document.createElement("div");
       grantedDiv.className = "access-granted";
       grantedDiv.textContent = accessGrantedText;
       terminal.appendChild(grantedDiv);
 
-      // Show file structure after a short delay
       setTimeout(() => {
-        fileStructure.forEach((line) => {
+        fileStructure.forEach(line => {
           const fsLine = document.createElement("div");
           fsLine.className = "user-input";
           fsLine.textContent = line;
